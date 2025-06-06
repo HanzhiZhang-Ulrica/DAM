@@ -26,20 +26,26 @@ Attention patterns in LLaMA 3.2 3B exhibit distinct behaviors as sequence length
 ### Pattern Extension Framework
 
 **Diagonal Pattern Definition:**
-$$P_{\text{diag}, r}(i,j) = \begin{cases}
-1, & \text{if } j = i - r \text{ and } i,j \geq 0 \\
-0, & \text{otherwise}
-\end{cases}$$
+```
+P_diag,r(i,j) = { 1, if j = i - r and i,j ≥ 0
+                 { 0, otherwise
+```
 
 **Vertical Pattern Definition:**
-$$P_{\text{vert}, c}(i,j) = \begin{cases}
-1, & \text{if } j = c \text{ and } i \geq c \\
-0, & \text{otherwise}
-\end{cases}$$
+```
+P_vert,c(i,j) = { 1, if j = c and i ≥ c  
+                 { 0, otherwise
+```
 
-**Pattern Pool:** $\mathcal{P} = \{P_{\text{diag}, r} : r \in [0, L-1]\} \cup \{P_{\text{vert}, c} : c \in [0, L-1]\}$
+**Pattern Pool:** 
+```
+P = {P_diag,r : r ∈ [0, L-1]} ∪ {P_vert,c : c ∈ [0, L-1]}
+```
 
-**Similarity Score:** $\gamma_k = \frac{\sum_{i,j} M_{\ell,h}^{(i,j)} \cdot P_k^{(i,j)}}{\sum_{i,j} P_k^{(i,j)}}$
+**Similarity Score:** 
+```
+γ_k = (Σ_i,j M_ℓ,h(i,j) · P_k(i,j)) / (Σ_i,j P_k(i,j))
+```
 
 ## 🔧 Feature Amplification Methods
 
@@ -49,15 +55,15 @@ We analyzed **9 transformation methods** for attention pattern visualization:
 
 | Method | Formula | Quality | Speed | Stability |
 |--------|---------|---------|-------|-----------|
-| **Box-Cox** ⭐ | $\frac{X^\lambda - 1}{\lambda}$ | Excellent | Medium | High |
-| Square Root | $\sqrt{X}$ | Good | Fast | Medium |
-| Logarithmic | $\log(X)$ | Fair | Fast | Low |
+| **Box-Cox** ⭐ | `(X^λ - 1) / λ` | Excellent | Medium | High |
+| Square Root | `√X` | Good | Fast | Medium |
+| Logarithmic | `log(X)` | Fair | Fast | Low |
 | Yeo-Johnson | Complex piecewise | Excellent | Slow | High |
-| Z-Score | $\frac{X - \mu}{\sigma}$ | Fair | Fast | Medium |
-| Min-Max | $\frac{X - \min}{\max - \min}$ | Fair | Fast | Low |
-| Average | $\frac{A}{C + \epsilon}$ | Poor | Fast | High |
-| Raw Sum | $A$ | Poor | Fastest | High |
-| Arcsinh | $\sinh^{-1}(X)$ | Fair | Fast | Medium |
+| Z-Score | `(X - μ) / σ` | Fair | Fast | Medium |
+| Min-Max | `(X - min) / (max - min)` | Fair | Fast | Low |
+| Average | `A / (C + ε)` | Poor | Fast | High |
+| Raw Sum | `A` | Poor | Fastest | High |
+| Arcsinh | `sinh⁻¹(X)` | Fair | Fast | Medium |
 
 ### Box-Cox Advantages (λ = 0.5)
 
@@ -114,23 +120,37 @@ We analyzed **9 transformation methods** for attention pattern visualization:
 ### Two-Stage Algorithm
 
 **Stage 1: Attention Accumulation**
-$$\bar{A}_{\ell,h,i,j} = \frac{A_{\ell,h,i,j}}{C_{\ell,h,i,j} + \epsilon}$$
+```
+Ā_ℓ,h,i,j = A_ℓ,h,i,j / (C_ℓ,h,i,j + ε)
+```
 
 **Stage 2: Mask Generation**
 
-1. **Feature Amplification:** $\tilde{A}_{\ell,h,i,j} = \frac{(\max(\bar{A}_{\ell,h,i,j}, \epsilon))^{0.5} - 1}{0.5}$
+1. **Feature Amplification:** 
+   ```
+   Ã_ℓ,h,i,j = (max(Ā_ℓ,h,i,j, ε)^0.5 - 1) / 0.5
+   ```
 
-2. **Binarization:** $M_{\ell,h,i,j}^{\text{thresh}} = \mathbf{1}[\tilde{A}_{\ell,h,i,j} \geq \tau]$
+2. **Binarization:** 
+   ```
+   M_ℓ,h,i,j^thresh = 1[Ã_ℓ,h,i,j ≥ τ]
+   ```
 
-3. **Pattern Matching:** $k^* = \arg\max_{k : \gamma_k \geq \mu} \gamma_k$
+3. **Pattern Matching:** 
+   ```
+   k* = argmax{k : γ_k ≥ μ} γ_k
+   ```
 
-4. **Extension:** $M_{\ell,h}^{\text{final}} = \text{ExtendPattern}(P_{k^*}, L_{\text{target}})$
+4. **Extension:** 
+   ```
+   M_ℓ,h^final = ExtendPattern(P_k*, L_target)
+   ```
 
 ### Computational Complexity
 
-**Memory Reduction:** $O(S \cdot L^2 \cdot H)$ where $S \approx 0.3$ (70% reduction)
+**Memory Reduction:** `O(S · L² · H)` where `S ≈ 0.3` (70% reduction)
 
-**Practical Speedup:** $S_{\text{practical}} \approx 2.25\times$ for $S = 0.3$
+**Practical Speedup:** `S_practical ≈ 2.25×` for `S = 0.3`
 
 ## ⚙️ Implementation Guidelines
 

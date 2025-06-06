@@ -39,29 +39,31 @@ DAM operates through a **two-stage framework** that dynamically learns sparse at
 
 DAM first extracts attention patterns from a frozen pretrained model processing sequences up to Pattern Capture Length (PCL). The baseline attention computation follows:
 
-$$S = \frac{QK^T}{\sqrt{d_k}}$$
+```
+S = QK^T / √d_k
+```
 
-where $Q \in \mathbb{R}^{n \times d_k}$ and $K \in \mathbb{R}^{m \times d_k}$ are query and key matrices.
+where `Q ∈ ℝ^(n×d_k)` and `K ∈ ℝ^(m×d_k)` are query and key matrices.
 
 **Feature Amplification via Box-Cox Transformation:**
 To enhance pattern visibility, we apply Box-Cox transformation to mean attention scores:
 
-$$B_{\ell,h,i,j} = \begin{cases}
-\frac{X_{\ell,h,i,j}^\lambda - 1}{\lambda}, & \text{if } \lambda \neq 0 \\
-\ln(X_{\ell,h,i,j}), & \text{if } \lambda = 0
-\end{cases}$$
+```
+B_ℓ,h,i,j = { (X_ℓ,h,i,j^λ - 1) / λ,  if λ ≠ 0
+            { ln(X_ℓ,h,i,j),           if λ = 0
+```
 
-where $X_{\ell,h,i,j} = \max(\bar{A}_{\ell,h,i,j}, \epsilon)$ are the stabilized mean attention values.
+where `X_ℓ,h,i,j = max(Ā_ℓ,h,i,j, ε)` are the stabilized mean attention values.
 
 **True Mask Generation:**
 Binary masks are generated through thresholding:
 
-$$m_{i,j} = \begin{cases}
-1, & \text{if } \tilde{A}_{\ell,h,i,j} \geq \tau \\
-0, & \text{if } \tilde{A}_{\ell,h,i,j} < \tau
-\end{cases}$$
+```
+m_i,j = { 1, if Ã_ℓ,h,i,j ≥ τ
+        { 0, if Ã_ℓ,h,i,j < τ
+```
 
-where $\tau$ is the threshold parameter and $\tilde{A}_{\ell,h,i,j}$ are the normalized attention values.
+where `τ` is the threshold parameter and `Ã_ℓ,h,i,j` are the normalized attention values.
 
 <div align="center">
 <img src="figures/feature_amplification-1.png" alt="Dynamic Pattern Visualization" width="70%">
@@ -71,23 +73,29 @@ where $\tau$ is the threshold parameter and $\tilde{A}_{\ell,h,i,j}$ are the nor
 ### ⚡ **Stage 2: Sparse Inference**
 
 **Dynamic Mask Generation via Pattern Matching:**
-For sequences longer than PCL, we use structural pattern matching. Each pattern $P_k$ is compared against true masks $M_{\ell,h}$ using similarity scores:
+For sequences longer than PCL, we use structural pattern matching. Each pattern `P_k` is compared against true masks `M_ℓ,h` using similarity scores:
 
-$$\gamma_k = \frac{\sum_{i,j} M_{\ell,h}^{(i,j)} \cdot P_k^{(i,j)}}{\sum_{i,j} P_k^{(i,j)}}$$
+```
+γ_k = (Σ_i,j M_ℓ,h(i,j) · P_k(i,j)) / (Σ_i,j P_k(i,j))
+```
 
-A pattern is matched if $\gamma_k \geq \mu$, where $\mu$ is the matching threshold.
+A pattern is matched if `γ_k ≥ μ`, where `μ` is the matching threshold.
 
 **Extended Mask Construction:**
 The final extended mask combines all matched patterns:
 
-$$\tilde{M}_{\ell,h} = \sum_{P_k \in \mathcal{P}, \gamma_k \geq \mu} P_k$$
+```
+M̃_ℓ,h = Σ_{P_k ∈ P, γ_k ≥ μ} P_k
+```
 
 **Sparse Attention Application:**
 The sparse attention is computed as:
 
-$$A'_{\ell,h} = \frac{Q_{\ell,h} K_{\ell,h}^T}{\sqrt{d_k}} \odot \tilde{M}_{\ell,h}$$
+```
+A'_ℓ,h = (Q_ℓ,h K_ℓ,h^T / √d_k) ⊙ M̃_ℓ,h
+```
 
-where $\odot$ denotes element-wise multiplication, effectively setting masked positions to $-\infty$ before softmax normalization.
+where `⊙` denotes element-wise multiplication, effectively setting masked positions to `-∞` before softmax normalization.
 
 ---
 
