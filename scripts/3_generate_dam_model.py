@@ -3,7 +3,10 @@ import re
 import pickle
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from dam_attention import DamLlamaForCausalLM  # Import the full model
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from src.dam_attention import DamLlamaForCausalLM  # Import the full model
 
 MAX_LENGTH = 1024
 THRESHOLD = 0.1
@@ -101,7 +104,7 @@ def generate_dam_model():
     model.save_pretrained(EDITED_MODEL_PATH)
     tokenizer.save_pretrained(EDITED_MODEL_PATH)
 
-    os.system(f"cp dam_attention.py {EDITED_MODEL_PATH}/dam_attention.py")
+    os.system(f"cp ../src/dam_attention.py {EDITED_MODEL_PATH}/dam_attention.py")
 
     print(f"DAM model saved to {EDITED_MODEL_PATH}")
 
