@@ -20,7 +20,7 @@
 **Authors:** [Hanzhi Zhang](https://hanzhizhang-ulrica.github.io/), Heng Fan, Kewei Sha, Yan Huang, Yunhe Feng
 
 <div align="center">
-<img src="figures/task-1.png" alt="Attention Patterns Comparison" width="80%">
+<img src="intermediate_data/doc_figures/task-1.png" alt="Attention Patterns Comparison" width="80%">
 <br><em>Comparison of attention patterns: (a) full attention, (b) static sparse attention, (c) predefined patterns, and (d) DAM's dynamic heterogeneous patterns.</em>
 </div>
 
@@ -29,7 +29,7 @@
 ## 🔬 Methodology Overview
 
 <div align="center">
-<img src="figures/framework-1.png" alt="DAM Framework Architecture" width="85%">
+<img src="intermediate_data/doc_figures/framework-1.png" alt="DAM Framework Architecture" width="85%">
 <br><em>Two-stage DAM framework: Pattern extraction and transformation (Stage 1) followed by efficient sparse inference (Stage 2).</em>
 </div>
 
@@ -66,7 +66,7 @@ m_i,j = { 1, if Ã_ℓ,h,i,j ≥ τ
 where `τ` is the threshold parameter and `Ã_ℓ,h,i,j` are the normalized attention values.
 
 <div align="center">
-<img src="figures/feature_amplification-1.png" alt="Dynamic Pattern Visualization" width="70%">
+<img src="intermediate_data/doc_figures/feature_amplification-1.png" alt="Dynamic Pattern Visualization" width="70%">
 <br><em>Box-Cox transformation (bottom) enhances pattern visibility compared to averaging (top), revealing heterogeneous structures in attention maps.</em>
 </div>
 
@@ -127,21 +127,21 @@ DAM demonstrates superior performance across multiple benchmarks and model sizes
 ### **Long-Context Performance**
 
 <div align="center">
-<img src="figures/all_models_boxplot_length_3B-1.png" alt="Long-Context Performance" width="75%">
+<img src="intermediate_data/doc_figures/all_models_boxplot_length_3B-1.png" alt="Long-Context Performance" width="75%">
 <br><em>Retrieval accuracy on LongEval benchmark (3.1k to 38.7k tokens). DAM maintains consistent performance while baselines degrade.</em>
 </div>
 
 ### **Model Comparison**
 
 <div align="center">
-<img src="figures/retrieval_accuracy_llama_dam-1.png" alt="Model Comparison Results" width="85%">
+<img src="intermediate_data/doc_figures/retrieval_accuracy_llama_dam-1.png" alt="Model Comparison Results" width="85%">
 <br><em>Detailed comparison for LLaMA 3.2 models. DAM closely matches dense attention across various positions and sequence lengths.</em>
 </div>
 
 ### **Benchmark Evaluation**
 
 <div align="center">
-<img src="figures/LVEval-1.png" alt="Benchmark Evaluation" width="80%">
+<img src="intermediate_data/doc_figures/LVEval-1.png" alt="Benchmark Evaluation" width="80%">
 <br><em>LV-Eval scores on long-context QA tasks. DAM achieves 18.61 at 64K tokens, significantly outperforming alternatives.</em>
 </div>
 
@@ -151,11 +151,17 @@ DAM demonstrates superior performance across multiple benchmarks and model sizes
 
 If you find DAM useful in your research, please cite our work:
 
-<!-- Citation will be added once paper is published -->
-
-<!-- When arXiv version is available, update citation with:
-journal={arXiv preprint arXiv:XXXX.XXXX},
--->
+```bibtex
+@misc{zhang2025damdynamicattentionmask,
+      title={DAM: Dynamic Attention Mask for Long-Context Large Language Model Inference Acceleration}, 
+      author={Hanzhi Zhang and Heng Fan and Kewei Sha and Yan Huang and Yunhe Feng},
+      year={2025},
+      eprint={2506.11104},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2506.11104}, 
+}
+```
 
 ---
 
@@ -163,7 +169,7 @@ journal={arXiv preprint arXiv:XXXX.XXXX},
 
 <div align="center">
 
-**[LLaVi Lab](https://llavi-lab.github.io/), University of North Texas**
+**[Responsible AI Lab](https://yunhefeng.me/lab/), University of North Texas**
 
 *Built with* 🤗 *HuggingFace Transformers* • *Triton* • *PyTorch*
 
@@ -172,5 +178,5 @@ journal={arXiv preprint arXiv:XXXX.XXXX},
 ---
 
 <div align="center">
-<strong>For more details, see our <a href="https://github.com/HanzhiZhang-Ulrica/DAM">project paper</a></strong>
+<strong>For more details, see our <a href="https://arxiv.org/abs/2506.11104">project paper</a></strong>
 </div> 

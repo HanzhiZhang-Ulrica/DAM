@@ -171,19 +171,6 @@ matching_threshold: 0.8
 percentile_threshold: 50
 ```
 
-### Usage Pipeline
-
-```bash
-# Step 1: Extract patterns
-python scripts/1_generate_attn_map.py --max_length 128 --num_samples 1000
-
-# Step 2: Generate masks  
-python scripts/2_generate_attn_mask.py --threshold 0.8 --transformation "box_cox"
-
-# Step 3: Create DAM model
-python scripts/3_generate_dam_model.py --mask_dir "./masks" --output_dir "./dam_model"
-```
-
 ### Performance Tuning
 
 **For Quality (Accuracy Priority):**
@@ -222,10 +209,13 @@ python scripts/3_generate_dam_model.py --mask_dir "./masks" --output_dir "./dam_
 When using this technical appendix, please cite the original DAM paper:
 
 ```bibtex
-@article{dam2024,
-  title={Dynamic Attention Mask: Efficient Long-Context Inference via Pattern Extension},
-  author={[Authors]},
-  journal={[Journal]},
-  year={2024}
+@misc{zhang2025damdynamicattentionmask,
+      title={DAM: Dynamic Attention Mask for Long-Context Large Language Model Inference Acceleration}, 
+      author={Hanzhi Zhang and Heng Fan and Kewei Sha and Yan Huang and Yunhe Feng},
+      year={2025},
+      eprint={2506.11104},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2506.11104}, 
 }
 ``` 
